@@ -1,4 +1,12 @@
-.PHONY: build
+.PHONY: run build clean
 
-build:
+start/HelloWorldSwing.class:
 	javac start/HelloWorldSwing.java
+
+build: start/HelloWorldSwing.class
+
+clean:
+	rm start/*.class
+
+run: build
+	java start.HelloWorldSwing
