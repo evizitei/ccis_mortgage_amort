@@ -1,12 +1,15 @@
 .PHONY: run build clean
 
-start/HelloWorldSwing.class:
-	javac start/HelloWorldSwing.java
+WORKDIR=mortgage
+APPNAME=CalculatorApp
 
-build: start/HelloWorldSwing.class
+mortgage/CalculatorApp.class:
+	javac $(WORKDIR)/$(APPNAME).java
+
+build: $(WORKDIR)/$(APPNAME).class
 
 clean:
-	rm start/*.class
+	rm $(WORKDIR)/*.class
 
 run: build
-	java start.HelloWorldSwing
+	java $(WORKDIR).$(APPNAME)
