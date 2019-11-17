@@ -13,6 +13,10 @@ public class LoanForm {
         this.rate = rate;
     }
 
+    public void setPrincipal(String val) {
+        principal = val;
+    }
+
     public double getPrincipal() {
         double value = 0.0;
         try {
@@ -23,6 +27,10 @@ public class LoanForm {
         return value;
     }
 
+    public void setTerm(String val) {
+        term = val;
+    }
+
     public int getTerm() {
         int value = 0;
         try {
@@ -31,6 +39,10 @@ public class LoanForm {
             value = -1;
         }
         return value;
+    }
+
+    public void setRate(String val) {
+        rate = val;
     }
 
     public double getRate() {
@@ -60,5 +72,10 @@ public class LoanForm {
 
     public boolean isValid() {
         return this.principalIsValid() && this.termIsValid() && this.rateIsValid();
+    }
+
+    public String outputSummary() {
+        return "PRINCIPAL: " + Double.toString(getPrincipal()) + " TERM: " + Double.toString(getTerm()) + " RATE: "
+                + Double.toString(getRate());
     }
 }
