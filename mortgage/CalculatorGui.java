@@ -140,10 +140,8 @@ public class CalculatorGui {
 
     class ChartListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            // display/center the jdialog when the button is pressed
-            JDialog d = new JDialog(guiFrame, "Hello Chart", true);
-            d.setLocationRelativeTo(guiFrame);
-            d.setVisible(true);
+            AmortTable chart = new AmortTable(guiFrame, loan);
+            chart.popup();
         }
     }
 
