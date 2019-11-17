@@ -56,16 +56,25 @@ public class LoanForm {
     }
 
     public boolean principalIsValid() {
+        if (!principal.matches("\\d+\\.*\\d*")) {
+            return false;
+        }
         double val = this.getPrincipal();
         return val > 0.0 && val < 1000000000.0;
     }
 
     public boolean termIsValid() {
+        if (!term.matches("\\d+\\.*\\d*")) {
+            return false;
+        }
         int val = this.getTerm();
         return val > 0 && val < 1000;
     }
 
     public boolean rateIsValid() {
+        if (!rate.matches("\\d+\\.*\\d*")) {
+            return false;
+        }
         double val = this.getRate();
         return val > -0.000000001 && val < 100.0;
     }

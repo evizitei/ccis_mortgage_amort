@@ -73,9 +73,6 @@ public class CalculatorGui {
         this.container.add(this.rightColumn, BorderLayout.EAST);
 
         this.guiFrame.setContentPane(this.container);
-
-        // Display the window.
-        // frame.setPreferredSize(new Dimension(500, 200));
         this.guiFrame.pack();
         this.guiFrame.setVisible(true);
         enableButtons(inputsValid());
@@ -97,17 +94,14 @@ public class CalculatorGui {
 
     class MortgageDocListener implements DocumentListener {
         public void insertUpdate(DocumentEvent e) {
-            System.out.println("EVENT FIRED");
             updateFormValues();
         }
 
         public void removeUpdate(DocumentEvent e) {
-            System.out.println("EVENT FIRED");
             updateFormValues();
         }
 
         public void changedUpdate(DocumentEvent e) {
-            System.out.println("EVENT FIRED");
             updateFormValues();
         }
 
