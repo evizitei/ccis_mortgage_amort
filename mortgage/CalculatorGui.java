@@ -147,10 +147,8 @@ public class CalculatorGui {
 
     class GraphListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            // display/center the jdialog when the button is pressed
-            JDialog d = new JDialog(guiFrame, "Hello Graph", true);
-            d.setLocationRelativeTo(guiFrame);
-            d.setVisible(true);
+            PrincipalGraph graph = new PrincipalGraph(guiFrame, loan);
+            graph.popup();
         }
     }
 }

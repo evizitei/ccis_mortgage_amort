@@ -13,6 +13,10 @@ public class Loan {
         ratePct = rate;
     }
 
+    public int getTerm() {
+        return termInMonths;
+    }
+
     public double getPrincipal() {
         return principalAmt;
     }
