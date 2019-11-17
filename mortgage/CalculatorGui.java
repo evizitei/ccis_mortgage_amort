@@ -2,9 +2,10 @@ package mortgage;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.text.*;
+
 import java.text.DecimalFormat;
 import java.awt.*;
+import java.awt.event.*;
 
 public class CalculatorGui {
     private JFrame guiFrame;
@@ -25,6 +26,7 @@ public class CalculatorGui {
     private JButton graphBtn;
     private boolean initialized;
     private LoanForm form;
+    private Loan loan;
 
     public CalculatorGui() {
         this.guiFrame = new JFrame("Mortgage Calculator");
@@ -46,17 +48,24 @@ public class CalculatorGui {
         this.rightColumn = new JPanel();
         this.initialized = false;
         this.form = new LoanForm(principalField.getText(), termField.getText(), rateField.getText());
+        this.loan = form.getLoan();
     }
 
     public void show() {
         if (!this.initialized) {
             this.assembleInterface();
+            this.bindButtons();
             this.initialized = true;
         }
     }
 
     public boolean inputsValid() {
         return form.isValid();
+    }
+
+    private void bindButtons() {
+        chartBtn.addActionListener(new ChartListener());
+        graphBtn.addActionListener(new GraphListener());
     }
 
     private void assembleInterface() {
@@ -95,8 +104,8 @@ public class CalculatorGui {
         chartBtn.setEnabled(inputsValid);
         graphBtn.setEnabled(inputsValid);
         if (inputsValid) {
-            double paymentAmt = form.getLoan().computePayment();
-            double paymentsTotal = form.getLoan().totalOfPayments();
+            double paymentAmt = loan.computePayment();
+            double paymentsTotal = loan.totalOfPayments();
             DecimalFormat df = new DecimalFormat("0.00");
             paymentField.setText(df.format(paymentAmt));
             totalField.setText(df.format(paymentsTotal));
@@ -110,6 +119,7 @@ public class CalculatorGui {
         form.setPrincipal(principalField.getText());
         form.setTerm(termField.getText());
         form.setRate(rateField.getText());
+        loan = form.getLoan();
         updateDerivativeUI(inputsValid());
     }
 
@@ -126,5 +136,23 @@ public class CalculatorGui {
             updateFormValues();
         }
 
+    }
+
+    class ChartListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            // display/center the jdialog when the button is pressed
+            JDialog d = new JDialog(guiFrame, "Hello Chart", true);
+            d.setLocationRelativeTo(guiFrame);
+            d.setVisible(true);
+        }
+    }
+
+    class GraphListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            // display/center the jdialog when the button is pressed
+            JDialog d = new JDialog(guiFrame, "Hello Graph", true);
+            d.setLocationRelativeTo(guiFrame);
+            d.setVisible(true);
+        }
     }
 }
