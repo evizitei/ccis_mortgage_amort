@@ -87,4 +87,8 @@ public class LoanForm {
         return "PRINCIPAL: " + Double.toString(getPrincipal()) + " TERM: " + Double.toString(getTerm()) + " RATE: "
                 + Double.toString(getRate());
     }
+
+    public Loan getLoan() {
+        return new Loan(getPrincipal(), getTerm(), getRate());
+    }
 }

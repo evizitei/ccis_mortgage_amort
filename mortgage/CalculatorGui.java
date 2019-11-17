@@ -3,6 +3,7 @@ package mortgage;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
+import java.text.DecimalFormat;
 import java.awt.*;
 
 public class CalculatorGui {
@@ -13,9 +14,13 @@ public class CalculatorGui {
     private JLabel principalLbl;
     private JLabel termLbl;
     private JLabel rateLbl;
+    private JLabel paymentLbl;
+    private JLabel totalLbl;
     private JTextField principalField;
     private JTextField termField;
     private JTextField rateField;
+    private JLabel paymentField;
+    private JLabel totalField;
     private JButton chartBtn;
     private JButton graphBtn;
     private boolean initialized;
@@ -26,10 +31,14 @@ public class CalculatorGui {
         this.guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.principalLbl = new JLabel("Principal Amount: $");
         this.termLbl = new JLabel("Loan Term (in years):");
-        this.rateLbl = new JLabel("Annual Percentage Rate:");
+        this.rateLbl = new JLabel("Interest Rate: %");
+        this.paymentLbl = new JLabel("Monthly Payment: $");
+        this.totalLbl = new JLabel("Total Repayment: $");
         this.principalField = new JTextField("250000", 20);
         this.termField = new JTextField("360", 20);
         this.rateField = new JTextField("3.5", 20);
+        this.paymentField = new JLabel();
+        this.totalField = new JLabel();
         this.chartBtn = new JButton("Amort. Table");
         this.graphBtn = new JButton("Principal Graph");
         this.container = new JPanel();
@@ -51,45 +60,57 @@ public class CalculatorGui {
     }
 
     private void assembleInterface() {
-        this.leftColumn.setLayout(new GridLayout(0, 1));
-        this.leftColumn.add(this.principalLbl);
-        this.leftColumn.add(this.termLbl);
-        this.leftColumn.add(this.rateLbl);
-        this.leftColumn.add(this.chartBtn);
+        leftColumn.setLayout(new GridLayout(0, 1));
+        leftColumn.add(principalLbl);
+        leftColumn.add(termLbl);
+        leftColumn.add(rateLbl);
+        leftColumn.add(paymentLbl);
+        leftColumn.add(totalLbl);
+        leftColumn.add(chartBtn);
 
         MortgageDocListener fieldListener = new MortgageDocListener();
-        this.rightColumn.setLayout(new GridLayout(0, 1));
-        this.rightColumn.add(this.principalField);
-        this.rightColumn.add(this.termField);
-        this.rightColumn.add(this.rateField);
-        this.rightColumn.add(this.graphBtn);
+        rightColumn.setLayout(new GridLayout(0, 1));
+        rightColumn.add(principalField);
+        rightColumn.add(termField);
+        rightColumn.add(rateField);
+        rightColumn.add(paymentField);
+        rightColumn.add(totalField);
+        rightColumn.add(graphBtn);
         principalField.getDocument().addDocumentListener(fieldListener);
         termField.getDocument().addDocumentListener(fieldListener);
         rateField.getDocument().addDocumentListener(fieldListener);
 
-        this.container.setBorder(BorderFactory.createEtchedBorder());
-        this.container.setLayout(new BorderLayout());
-        this.container.add(this.leftColumn, BorderLayout.CENTER);
-        this.container.add(this.rightColumn, BorderLayout.EAST);
+        container.setBorder(BorderFactory.createEtchedBorder());
+        container.setLayout(new BorderLayout());
+        container.add(leftColumn, BorderLayout.CENTER);
+        container.add(rightColumn, BorderLayout.EAST);
 
-        this.guiFrame.setContentPane(this.container);
-        this.guiFrame.pack();
-        this.guiFrame.setVisible(true);
-        enableButtons(inputsValid());
+        guiFrame.setContentPane(container);
+        guiFrame.pack();
+        guiFrame.setVisible(true);
+        updateDerivativeUI(inputsValid());
     }
 
-    private void enableButtons(boolean enabled) {
-        chartBtn.setEnabled(enabled);
-        graphBtn.setEnabled(enabled);
+    private void updateDerivativeUI(boolean inputsValid) {
+        chartBtn.setEnabled(inputsValid);
+        graphBtn.setEnabled(inputsValid);
+        if (inputsValid) {
+            double paymentAmt = form.getLoan().computePayment();
+            double paymentsTotal = form.getLoan().totalOfPayments();
+            DecimalFormat df = new DecimalFormat("0.00");
+            paymentField.setText(df.format(paymentAmt));
+            totalField.setText(df.format(paymentsTotal));
+        } else {
+            paymentField.setText("-- (input invalid) --");
+            totalField.setText("-- (input invalid) --");
+        }
     }
 
     private void updateFormValues() {
         form.setPrincipal(principalField.getText());
         form.setTerm(termField.getText());
         form.setRate(rateField.getText());
-        System.out.println("SUMMARY:  " + form.outputSummary());
-        System.out.println("IS VALID: " + Boolean.toString(form.isValid()));
-        enableButtons(inputsValid());
+        updateDerivativeUI(inputsValid());
     }
 
     class MortgageDocListener implements DocumentListener {
