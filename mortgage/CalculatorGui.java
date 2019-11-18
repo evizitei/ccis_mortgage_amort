@@ -7,6 +7,12 @@ import java.text.DecimalFormat;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * CalculatorGui is the top level UI object containing the JFrame for the main
+ * display window and all the UI components that are part of the entry form
+ * window. Those components are organized internally into columns, but all are
+ * attributes of this GUI object.
+ */
 public class CalculatorGui {
     private JFrame guiFrame;
     private JPanel container;
@@ -28,6 +34,11 @@ public class CalculatorGui {
     private LoanForm form;
     private Loan loan;
 
+    /**
+     * The constructor instantiates all of the UI components and puts default values
+     * into a LoanForm instance to help the user understand what format to put in
+     * each entry field.
+     */
     public CalculatorGui() {
         this.guiFrame = new JFrame("Mortgage Calculator");
         this.guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,6 +62,11 @@ public class CalculatorGui {
         this.loan = form.getLoan();
     }
 
+    /**
+     * The show method makes sure we don't orchestrate the UI more than once since
+     * several components include configurations that are not idempotent and we only
+     * want that run once.
+     */
     public void show() {
         if (!this.initialized) {
             this.assembleInterface();
@@ -59,15 +75,33 @@ public class CalculatorGui {
         }
     }
 
+    /**
+     * inputsValid is a wrapper for checking the correct formatting of the inputs in
+     * all the form fields, though it delegates the actual validation logic to the
+     * LoanForm instance
+     *
+     * @return the validity assessment from the LoanForm instance
+     */
     public boolean inputsValid() {
         return form.isValid();
     }
 
+    /**
+     * bindButtons is part of the UI assembly routine initializing listener objects
+     * for the interactive components and attaching them to the UI elementrs that
+     * should trigger them.
+     */
     private void bindButtons() {
         chartBtn.addActionListener(new ChartListener());
         graphBtn.addActionListener(new GraphListener());
     }
 
+    /**
+     * assembleInterface is called from the UI assembly routine and organizes all
+     * the swing UI components in this form into a 2 column layout. It also attaches
+     * change handlers to each text field so that we can check the validity of
+     * inputs as they change and recompute the derived payments values real time.
+     */
     private void assembleInterface() {
         leftColumn.setLayout(new GridLayout(0, 1));
         leftColumn.add(principalLbl);
@@ -100,6 +134,16 @@ public class CalculatorGui {
         updateDerivativeUI(inputsValid());
     }
 
+    /**
+     * updateDerivativeUI changes the entry form depending on whether all the input
+     * fields contain valid data. If they do, the buttons are enabled and the
+     * payment and total fields are recomputed. Otherwise the payments get turned
+     * off and the paymen and total fields are updated to give visual feedback that
+     * the inputs are problematic.
+     *
+     * @param inputsValid boolean indicating whether the text input from the user is
+     *                    ok. Should be queried from the LoanForm instnace.
+     */
     private void updateDerivativeUI(boolean inputsValid) {
         chartBtn.setEnabled(inputsValid);
         graphBtn.setEnabled(inputsValid);
@@ -115,6 +159,11 @@ public class CalculatorGui {
         }
     }
 
+    /**
+     * updateFormValues retrieves the text in each field from the UI and updates all
+     * the values in the LoanForm instance (which handles the validation logic).
+     * This lets us call one method no matter which field they change.
+     */
     private void updateFormValues() {
         form.setPrincipal(principalField.getText());
         form.setTerm(termField.getText());
@@ -123,6 +172,11 @@ public class CalculatorGui {
         updateDerivativeUI(inputsValid());
     }
 
+    /**
+     * MortgageDocListener is meant to be attached to each of the text fields on the
+     * entry form. Changing any of them will cause updateFormValues to be run again,
+     * removing any need to thread individual fields to individual form values.
+     */
     class MortgageDocListener implements DocumentListener {
         public void insertUpdate(DocumentEvent e) {
             updateFormValues();
@@ -138,6 +192,11 @@ public class CalculatorGui {
 
     }
 
+    /**
+     * ChartListener is meant to be attached to the chart button and is the bridge
+     * for instantiating an AmortTable instance for showing the list of payments for
+     * a loan.
+     */
     class ChartListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             AmortTable chart = new AmortTable(guiFrame, loan);
@@ -145,6 +204,11 @@ public class CalculatorGui {
         }
     }
 
+    /**
+     * GraphListener is meant to be attached to the graph button and is the bridge
+     * for instantiating a PrincipalGraph instance for showing the graph of the
+     * principal balance over time for a specific loan configuration.
+     */
     class GraphListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             PrincipalGraph graph = new PrincipalGraph(guiFrame, loan);
