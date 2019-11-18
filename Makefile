@@ -1,15 +1,24 @@
-.PHONY: run build clean
+.PHONY: run build clean package
 
 WORKDIR=mortgage
 APPNAME=CalculatorApp
+PACKAGE=build/package.zip
 
-mortgage/CalculatorApp.class:
+$(WORKDIR)/$(APPNAME).class:
 	javac $(WORKDIR)/$(APPNAME).java
 
 build: $(WORKDIR)/$(APPNAME).class
 
 clean:
-	rm $(WORKDIR)/*.class
+	rm -f $(WORKDIR)/*.class
+	rm -f build/package.zip
 
 run: build
 	java $(WORKDIR).$(APPNAME)
+
+$(PACKAGE):
+	zip $(PACKAGE) mortgage/*.java
+	zip $(PACKAGE) README.md
+	zip $(PACKAGE) Makefile
+
+package: $(PACKAGE)

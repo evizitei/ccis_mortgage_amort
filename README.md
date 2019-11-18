@@ -19,6 +19,9 @@ Use `make clean` to remove all current assets.
 Use `make run` to start the app (which will `make build` as a dependency task).  This compiles
 the java code and kicks off the mortgage calculator.
 
+Use `make package` to zip the source elements up for distribution as a java project,
+no git assets included.
+
 If you do NOT have make on your machine, you can just do the java tasks yourself from
 the root of this project directory.
 
@@ -27,3 +30,10 @@ COMPILE:
 
 RUN:
 `java mortgage.CalculatorApp`
+
+PACKAGE:
+```bash
+zip build/package.zip mortgage/*.java
+zip build/package.zip README.md
+zip build/package.zip Makefile
+```
